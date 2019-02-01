@@ -180,46 +180,6 @@ public class MainActivity extends AppCompatActivity {
         return str;
     } // to get username
 
-    private void signUserOut() {
-        // TODO: sign the user out
-        mAuth.signOut();
-    }
-
-    private void createUserAccount() {
-        if (!checkFormFields())
-            return;
-
-        String email = USERNAME.getText().toString();
-        String password = USERPASS.getText().toString();
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this,
-                        new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(MainActivity.this, "User created", Toast.LENGTH_SHORT)
-                                            .show();
-                                } else {
-                                    Toast.makeText(MainActivity.this, "Account creation failed", Toast.LENGTH_SHORT)
-                                            .show();
-                                }
-                            }
-                        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
-                        if (e instanceof FirebaseAuthUserCollisionException) {
-                            Toast.makeText(MainActivity.this, "This email address is already in use.", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "ERROR.", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    }
-                });
-    }
+   
 
 } //end of MainActivity class
