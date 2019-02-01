@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "62421744651",
+    "firebase_url": "https://logindb-3c01e.firebaseio.com",
+    "project_id": "logindb-3c01e",
+    "storage_bucket": "logindb-3c01e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62421744651:android:c71f700d69e6d59f",
+        "android_client_info": {
+          "package_name": "com.algonquincollege.skai0001.logindb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62421744651-7hu0ml5s6e25nv0fpaqtivhrko21p8q7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.algonquincollege.skai0001.logindb",
+            "certificate_hash": "4956f490bbf22f81d5d0b0b1093ebc18d82b6c86"
+          }
+        },
+        {
+          "client_id": "62421744651-ai43fd3o5kg7rnmcdh8oc36mheajsfm4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD3pK4Lr7uHTumK9Pe8INlRpEcDTT4T74"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62421744651-uq96mjt6uq1l5mpmef8ch7hj9trpfn21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
