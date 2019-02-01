@@ -30,6 +30,7 @@ public class CreateAccount extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,7 +131,6 @@ public class CreateAccount extends AppCompatActivity {
 
             // add to authentication
             mAuth.createUserWithEmailAndPassword(email, pass);
-
 
             // add to Firestore
             users.add(new Accounts(fname, lname, uname, email, pass)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

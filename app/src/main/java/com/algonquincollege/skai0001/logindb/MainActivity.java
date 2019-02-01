@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private Button login, register;
     private EditText USERNAME, USERPASS;
 
+
+
+    private String str ="";
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -118,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+
+                                    str =USERNAME.getText().toString(); // saves the username
+
                                     Toast.makeText(MainActivity.this, "Signed in", Toast.LENGTH_SHORT)
                                             .show();
                                     Intent intent = new Intent(MainActivity.this, Welcome.class);
@@ -146,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     } // end of signUserIn()
 
 
@@ -167,6 +175,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     } // end of checkFormFields()
 
+
+    public String getStr() {
+        return str;
+    } // to get username
 
     private void signUserOut() {
         // TODO: sign the user out
