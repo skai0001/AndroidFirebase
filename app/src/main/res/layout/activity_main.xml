@@ -79,4 +79,21 @@
         app:layout_constraintTop_toBottomOf="@+id/loginbtn"
         app:layout_constraintVertical_bias="0.017" />
 
+    <Button
+        android:id="@+id/forgetpassbtn"
+        android:layout_width="324dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="FORGET PASSWORD"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.106"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_accountbtn"
+        app:layout_constraintVertical_bias="0.017" />
+
 </android.support.constraint.ConstraintLayout>
