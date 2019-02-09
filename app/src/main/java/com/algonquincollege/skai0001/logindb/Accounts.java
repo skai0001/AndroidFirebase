@@ -1,6 +1,7 @@
 package com.algonquincollege.skai0001.logindb;
 
 
+
 public class Accounts {
 
 
@@ -27,6 +28,7 @@ public class Accounts {
     public String getEmail() {
         return email;
     }
+
 
 
 }

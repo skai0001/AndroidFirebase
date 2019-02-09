@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -129,11 +130,12 @@ public class CreateAccount extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        users.document(email).set(new Accounts(fname, lname, email)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    if (task.isSuccessful()) {
+                        users.add(new Accounts(fname, lname, email)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
                                 Toast.makeText(CreateAccount.this, "Data saved to FireStore", Toast.LENGTH_SHORT).show();
+
                             }
                         });
                     } else{

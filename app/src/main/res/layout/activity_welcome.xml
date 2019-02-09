@@ -122,6 +122,25 @@
         app:layout_constraintTop_toBottomOf="@+id/editbtn"
         app:layout_constraintVertical_bias="0.011" />
 
+
+    <Button
+        android:id="@+id/addchildrenbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="addChildren"
+        android:text="ADD CHILD"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/savebtn"
+        app:layout_constraintVertical_bias="0.011" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -181,6 +200,19 @@
         app:layout_constraintHorizontal_bias="0.245"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/displayid"
+        android:layout_width="311dp"
+        android:layout_height="172dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addchildrenbtn" />
 
 
 </android.support.constraint.ConstraintLayout>

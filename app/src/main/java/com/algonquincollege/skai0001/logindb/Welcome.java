@@ -1,8 +1,10 @@
 package com.algonquincollege.skai0001.logindb;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,19 +16,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 
 public class Welcome extends AppCompatActivity {
 
-    private EditText display_fname, display_lname, display_email, display_pass;
+    private EditText display_fname, display_lname, display_email, display_pass, displayID;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference users = FirebaseFirestore.getInstance().collection("Users");
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    String documentName="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,7 @@ public class Welcome extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         init();
+        getdocID(documentName);
     }
 
     /*initialization*/
@@ -42,13 +49,11 @@ public class Welcome extends AppCompatActivity {
         display_lname = findViewById(R.id.lastname_data);
         display_email = findViewById(R.id.email_data);
         display_pass = findViewById(R.id.pass_data);
+        displayID = findViewById(R.id.displayid);
     }
-
-
 
     /* TODO updates data to Authentication */
     public void updateData(View v) { //updates email and password in authentication
-        String docName = user.getEmail();
 
         String FIRSTNAME = display_fname.getText().toString();
         String LASTNAME = display_lname.getText().toString();
@@ -56,7 +61,8 @@ public class Welcome extends AppCompatActivity {
         final String PASSWORD = display_pass.getText().toString();
 
 
-        DocumentReference doc = db.collection("Users").document(docName);
+
+        DocumentReference doc = db.collection("Users").document(documentName);
 
         /*conditions for values*/
         if (FIRSTNAME.trim().equals("") || FIRSTNAME.length() < 2) {
@@ -86,9 +92,9 @@ public class Welcome extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 user.updatePassword(PASSWORD);
+                                Toast.makeText(Welcome.this, "Data updated!", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        Toast.makeText(Welcome.this, "Data updated!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(Welcome.this, "ERROR!", Toast.LENGTH_SHORT).show();
                     }
@@ -97,7 +103,8 @@ public class Welcome extends AppCompatActivity {
         }
     } // end of updateData()
 
-// TODO: retrieve data from FireStore DB
+
+    // TODO: retrieve data from FireStore DB
     public void loadDataFromDB(View v) {
 
         String email = user.getEmail();
@@ -127,4 +134,38 @@ public class Welcome extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+
+    public void addChildren(View v) {
+        Intent intent = new Intent(Welcome.this, ChildrenProfile.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /* TODO : retrieves the document id, to be used to update the document from updateData()*/
+    public String getdocID(String str) {
+
+        String email = user.getEmail();
+        db.collection("Users")
+                .whereEqualTo("email", email) // <-- This line
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+
+                                documentName = document.getId();
+
+                            }
+                        } else {
+                            Toast.makeText(Welcome.this, "ERROR!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        return documentName;
+    } // end of getdocID();
+
 } // end of Welcome Activity
+
+
