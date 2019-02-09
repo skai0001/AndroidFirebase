@@ -10,8 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,7 +25,7 @@ public class CreateAccount extends AppCompatActivity {
 
 
     private Button backbtn;
-    private EditText FIRSTNAME, LASTNAME, USERNAME, EMAIL, PASSWORD;
+    private EditText FIRSTNAME, LASTNAME, EMAIL, PASSWORD;
     private static final String TAG = "Create Account";
     private CollectionReference users;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -75,14 +76,13 @@ public class CreateAccount extends AppCompatActivity {
     }
 
 
-        /*initialization*/
+    /*initialization*/
     public void init() {
-        backbtn = (Button) findViewById(R.id.backbtn);
-        FIRSTNAME = (EditText) findViewById(R.id.firstname);
-        LASTNAME = (EditText) findViewById(R.id.lastname);
-        USERNAME = (EditText) findViewById(R.id.username);
-        EMAIL = (EditText) findViewById(R.id.email);
-        PASSWORD = (EditText) findViewById(R.id.pwd);
+        backbtn =  findViewById(R.id.backbtn);
+        FIRSTNAME =  findViewById(R.id.firstname);
+        LASTNAME =  findViewById(R.id.lastname);
+        EMAIL =  findViewById(R.id.email);
+        PASSWORD =  findViewById(R.id.pwd);
 
     }
 
@@ -100,53 +100,49 @@ public class CreateAccount extends AppCompatActivity {
 
     public void saveData(View v) {
 
-        String fname = FIRSTNAME.getText().toString();
-        String lname = LASTNAME.getText().toString();
-        String uname = USERNAME.getText().toString();
-        String email = EMAIL.getText().toString();
-        String pass = PASSWORD.getText().toString();
+        final String fname = FIRSTNAME.getText().toString();
+        final String lname = LASTNAME.getText().toString();
+        final String email = EMAIL.getText().toString();
+        final String pass = PASSWORD.getText().toString();
 
 
         users = FirebaseFirestore.getInstance().
                 collection("Users");
 
         /*conditions for values*/
-        if( FIRSTNAME.getText().toString().trim().equals("") || FIRSTNAME.length() < 2 ) {
+        if (FIRSTNAME.getText().toString().trim().equals("") || FIRSTNAME.length() < 2) {
             FIRSTNAME.setError("First name is required!");
 
-        }else if( LASTNAME.getText().toString().trim().equals("") || LASTNAME.length() < 2) {
+        } else if (LASTNAME.getText().toString().trim().equals("") || LASTNAME.length() < 2) {
             LASTNAME.setError("Last name is required!");
-        } else if( USERNAME.getText().toString().trim().equals("") || USERNAME.length() < 2) {
-            USERNAME.setError("User name is required!");
-        }else if(EMAIL.getText().toString().trim().equals("")) {
+        } else if (EMAIL.getText().toString().trim().equals("")) {
             EMAIL.setError("Email name is required!");
-        }else if( PASSWORD.getText().toString().trim().equals("") || PASSWORD.length() < 6) {
+        } else if (PASSWORD.getText().toString().trim().equals("") || PASSWORD.length() < 6) {
             PASSWORD.setError("Password is required and should be over 6!");
 
-        } else if (!isEmailValid(email)){
+        } else if (!isEmailValid(email)) {
             EMAIL.setError("Please check you email!");
 
         } else {
 
 
             // add to authentication
-            mAuth.createUserWithEmailAndPassword(email, pass);
+            mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        users.add(new Accounts(fname, lname, email)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(CreateAccount.this, "Data saved to FireStore", Toast.LENGTH_SHORT).show();
 
-            // add to Firestore
-            users.add(new Accounts(fname, lname, uname, email, pass)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Toast.makeText(CreateAccount.this, "Data saved to FireStore", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CreateAccount.this, "Error!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
+                            }
+                        });
+                    } else{
+                        Toast.makeText(CreateAccount.this, "ERROR!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
-
-
 
             Intent intent = new Intent(CreateAccount.this, MainActivity.class);
             startActivity(intent);
@@ -158,4 +154,6 @@ public class CreateAccount extends AppCompatActivity {
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+
 } // end of CreateAccount Activity

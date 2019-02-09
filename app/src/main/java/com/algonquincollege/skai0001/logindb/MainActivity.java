@@ -20,16 +20,19 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
+
+
+
 public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = "MainActivity";
-    private Button login, register;
+    private Button login, register, forgetpassbtn;
     private EditText USERNAME, USERPASS;
 
 
 
-    private String str ="";
+
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         login();
         register();
+        forgetPassword();
     }
 
     @Override
@@ -79,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void init() {
-        login = (Button) findViewById(R.id.loginbtn);
-        register = (Button) findViewById(R.id.create_accountbtn);
-        USERNAME = (EditText) findViewById(R.id.uname);
-        USERPASS = (EditText) findViewById(R.id.pasword);
+        login = findViewById(R.id.loginbtn);
+        register =  findViewById(R.id.create_accountbtn);
+        forgetpassbtn = findViewById(R.id.forgetpassbtn);
+        USERNAME = findViewById(R.id.uname);
+        USERPASS =  findViewById(R.id.pasword);
     } // end of init()
 
 
@@ -123,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
 
-                                    str =USERNAME.getText().toString(); // saves the username
 
                                     Toast.makeText(MainActivity.this, "Signed in", Toast.LENGTH_SHORT)
                                             .show();
@@ -176,10 +180,59 @@ public class MainActivity extends AppCompatActivity {
     } // end of checkFormFields()
 
 
-    public String getStr() {
-        return str;
-    } // to get username
 
-   
+    public void forgetPassword() {
+        forgetpassbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ForgetPasswordActivty.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+
+    private void signUserOut() {
+        // TODO: sign the user out
+        mAuth.signOut();
+    }
+
+    private void createUserAccount() {
+        if (!checkFormFields())
+            return;
+
+        String email = USERNAME.getText().toString();
+        String password = USERPASS.getText().toString();
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this,
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(MainActivity.this, "User created", Toast.LENGTH_SHORT)
+                                            .show();
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Account creation failed", Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            }
+                        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                        if (e instanceof FirebaseAuthUserCollisionException) {
+                            Toast.makeText(MainActivity.this, "This email address is already in use.", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "ERROR.", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+                });
+    }
 
 } //end of MainActivity class
